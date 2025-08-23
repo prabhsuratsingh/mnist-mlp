@@ -72,7 +72,7 @@ class MLP:
         # input dimension: [n_classes, n_examples] dot [n_examples, n_hidden]
         # output dimension: [n_classes, n_hidden]
         d_loss__dw_out = np.dot(delta_out.T, d_z_out__dw_out)
-        d_loss__db_out = np.aum(delta_out, axis=0)
+        d_loss__db_out = np.sum(delta_out, axis=0)
 
         # Step 2:
         # dLoss/dHiddenWeights = DeltaOut * dOutNet/dHiddenAct * dHiddenAct/dHiddenNet * dHiddenNet/dWeight

@@ -1,11 +1,12 @@
 from data.dataset import MNISTDataset as dataset
 from data.preprocess import Preprocess
 from models.mlp import MLP
-from training.loss import compute_mse_and_acc, mse_loss
-from training.batch import minibatch_generator
+from training.loss import compute_mse_and_acc
 import numpy as np
 
-from utils.metrics import accuracy
+from training.training_loop import train
+from utils.metric_plots import plot_acc, plot_mse
+from utils.plot_images import PlotImages
 
 
 def main():
@@ -20,26 +21,28 @@ def main():
         num_classes=10
     )
 
-    # for i in range(50):
-    #     mg = minibatch_generator(X_train, y_train, 100)
-    #     for Xm, ym in mg:
-    #         break
-    #     break
+    np.random.seed(123)
 
-    # print(Xm.shape)
-    # print(ym.shape)
+    epoch_loss, epoch_train_acc, epoch_valid_acc = train(
+        model,
+        X_train,
+        y_train,
+        X_valid,
+        y_valid,
+        num_epochs=50,
+        learning_rate=0.1
+    )
 
-    # _, probas = model.forward(X_valid)
-    # mse = mse_loss(y_valid, probas)
-    # print(f"Initial validation MSE: {mse:.1f}")
+    plot_mse(epoch_loss)
+    plot_acc(epoch_train_acc, epoch_valid_acc)
 
-    # predicted_labels = np.argmax(probas, axis=1)
-    # acc = accuracy(y_valid, predicted_labels)
-    # print(f"Initial validation accuracy: {acc*100:.1f}")
+    # test
+    test_mse, test_acc = compute_mse_and_acc(model, X_test, y_test)
+    print(f"Test Accuracy: {test_acc*100:.2f}%")
 
-    mse, acc = compute_mse_and_acc(model, X_valid, y_valid)
-    print(f"Initial validation MSE: {mse:.1f}")
-    print(f"Initial validation accuracy: {acc*100:.1f}")
+    plotter = PlotImages()
+    plotter.display_missclassified(model, X_test, y_test)
+    
 
 if __name__ == "__main__":
     main()
