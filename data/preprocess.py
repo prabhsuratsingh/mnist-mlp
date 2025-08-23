@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 
 class Preprocess:
-    def split_data(self,X,y):
+    def split_data(X,y):
         X_temp, X_test, y_temp, y_test = train_test_split(
             X, y, test_size=10000, random_state=123, stratify=y
         )
